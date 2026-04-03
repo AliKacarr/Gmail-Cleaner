@@ -29,7 +29,7 @@ pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-pyt
 1. Enable the Gmail API in Google Cloud.
 2. Create an OAuth `Desktop app` credential.
 3. Download the JSON file and place it in the project root as `credentials.json`.
-4. Create `filterFrom.txt` from `filterFrom.example.txt`, then add one email address per line.
+4. Create `filterFrom.txt` and add one email address per line.
 5. Run the script:
 
 ```bash
