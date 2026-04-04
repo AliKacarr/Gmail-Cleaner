@@ -1,62 +1,66 @@
-# GMailCleaner
 
-Python script to move matching Gmail messages to Trash.
+Gmail iletilerinizi topluca çöp kutusuna taşıyan python betiği ⚡🗑️
 
-## What it does
+## Ne yapar?
 
-The script:
+- Gmail API ile OAuth kullanarak kimlik doğrular
+- `filterFrom.txt` içindeki e-posta adreslerini okur
+- bu adreslerin `from:` veya `to:` alanında geçtiği iletileri arar
+- tüm eşleşmeleri Gmail Çöp Kutusu’na taşır
+- kaç ileti bulunduğunu ve kaçının taşındığını yazdırır
 
-- authenticates with the Gmail API using OAuth
-- reads email addresses from `filterFrom.txt`
-- searches messages where those addresses appear in either `from:` or `to:`
-- moves all matches to Gmail Trash
-- prints how many emails were found and how many were moved
+## Video rehberi
 
-## Requirements
+Kurulum ve işlemlerin nasıl yapılacağını adım adım anlattığım video: **[Kurulum ve kullanım videosu](#)**  
 
-- Python 3
-- `credentials.json` from Google Cloud OAuth Desktop App credentials
-- Gmail API enabled in your Google Cloud project
+## Kurulum ve kullanım
 
-Install dependencies:
+**Bilgisayarınızda Python kurulu olduğundan emin olun**.
 
-```bash
-pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
-```
-
-## How to use
-
-1. Enable the Gmail API in Google Cloud.
-2. Create an OAuth `Desktop app` credential.
-3. Download the JSON file and place it in the project root as `credentials.json`.
-4. Create `filterFrom.txt` and add one email address per line.
-5. Run the script:
+1. **Adım:** GitHub’dan proje dosyalarını indirin (veya depoyu klonlayın).
+2. **Adım:** [Google Cloud Console](https://console.cloud.google.com/)’da projenizde **Gmail API**’yi etkinleştirin.
+3. **Adım:** **Credentials (Kimlik bilgileri)** bölümünden yeni OAuth istemcisi oluştururken **Desktop app** türünü seçin.
+4. **Adım:** Size verilen JSON dosyasını proje dizinine **`credentials.json`** adıyla kaydedin.
+5. **Adım:** Oluşturduğunuz masaüstü istemcisinin ayarlarına gidip **veri erişim izinlerini** verin ve kendi Google hesabınızı **test kullanıcısı** olarak ekleyin (OAuth ekranı gerekiyorsa).
+6. **Adım:** `filterFrom.txt` dosyasını açıp silme işlemi uygulamak istediğiniz eposta adresini yazın.
+7. **Adım:** Terminalde proje klasöründeyken şunu çalıştırın:
 
 ```bash
 python mail_deleter.py
 ```
 
-On first run, a browser window opens for Google authorization. After approval, a token file is saved in the `token files` folder.
+İlk çalıştırmada tarayıcıda Google yetkilendirmesi açılır; onaydan sonra `token files` klasörüne bir token dosyası kaydedilir.
 
-## Filter behavior
+Detaylı anlatım için yukarıdaki **video rehberi**ne bakabilirsiniz.
 
-Each line in `filterFrom.txt` is used to build a Gmail query like this:
+## Gereksinimler
 
-```text
-(from:example@gmail.com OR to:example@gmail.com)
+- Python 3
+- Google Cloud’da Gmail API’nin açık olması
+- OAuth **Desktop app** kimlik bilgileri → proje kökünde `credentials.json`
+
+Bağımlılıklar:
+
+```bash
+pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
 ```
 
-This means the script can match:
+## Filtre davranışı
 
-- emails received from that address
-- emails sent to that address
+Her satır, kabaca şu Gmail sorgusuna dönüştürülür:
 
-Multiple lines are combined with `OR`.
+```text
+(from:ornek@gmail.com OR to:ornek@gmail.com)
+```
 
-## Custom queries
+Yani hem o adresten **gelen** hem de o adrese **giden** mailler eşleşir. Birden fazla satır `OR` ile birleştirilir.
 
-If you want to use your own Gmail search query, check the [Gmail search operators documentation](https://support.google.com/mail/answer/7190?hl=en) and replace the generated query in `mail_deleter.py`.
+**Özelleştirme:** Kodu yalnızca **gönderilen** veya yalnızca **gelen** maillerin silinmesi (taşınması) için `mail_deleter.py` içindeki sorguyu buna göre düzenleyebilirsiniz; böylece davranışı ihtiyacınıza göre daraltırsınız.
 
-## Warning
+## Özel sorgular
 
-Matching emails are moved to Trash automatically. Test with a small filter first.
+Kendi Gmail arama sorgunuzu kullanmak isterseniz [Gmail arama operatörleri](https://support.google.com/mail/answer/7190?hl=tr) dokümanına bakıp `mail_deleter.py` içinde üretilen sorguyu değiştirebilirsiniz.
+
+## Uyarı
+
+Eşleşen mailler otomatik olarak Çöp Kutusu’na taşınır!
